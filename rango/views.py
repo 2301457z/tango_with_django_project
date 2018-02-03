@@ -61,11 +61,13 @@ def add_category(request):
     # Have we been provided with a valid form?
         if form.is_valid():
             # Save the new category to the database.
-            form.save(commit=True)
+
             # Now that the category is saved
             # We could give a confirmation message
             # But since the most recent category added is on the index page
             # Then we can direct the user back to the index page.
+            category = form.save(commit=True)
+            print(category,category.slug)
             return index(request)
         else:
             # The supplied form contained errors -
@@ -89,7 +91,7 @@ def add_page(request, category_name_slug):
                 page.category = category
                 page.views = 0
                 page.save()
-                return show_category(request, category_name_slug)
+            return show_category(request, category_name_slug)
         else:
             print(form.errors)
     context_dict = {'form':form, 'category': category}
