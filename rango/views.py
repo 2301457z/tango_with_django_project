@@ -8,7 +8,8 @@ from rango.forms import UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
-
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 def index(request):
     # Construct a dictionary to pass to the template engine as its context.
     # Note the key boldmessage is the same as {{boldmessage}} in the template!
@@ -58,6 +59,7 @@ def show_category(request,category_name_slug):
         # Go render the response and return it to the client.
     return render(request, 'rango/category.html', context_dict)
 
+@login_required
 def add_category(request):
     form = CategoryForm()
     # A HTTP POST?
@@ -82,6 +84,7 @@ def add_category(request):
     # Render the form with error messages (if any).
     return render(request, 'rango/add_category.html', {'form': form})
 
+@login_required
 def add_page(request, category_name_slug):
     try:
         category = Category.objects.get(slug=category_name_slug)
@@ -193,3 +196,15 @@ def user_login(request):
 # No context variables to pass to the template system, hence the
 # blank dictionary object...
         return render(request, 'rango/login.html', {})
+
+@login_required
+def restricted(request):
+    return render(request, 'rango/restricted.html')
+# Use the login_required() decorator to ensure only those logged in can
+# access the view.
+@login_required
+def user_logout(request):
+    # Since we know the user is logged in, we can now just log them out.
+    logout(request)
+    # Take the user back to the homepage.
+    return HttpResponseRedirect(reverse('index'))
