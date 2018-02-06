@@ -35,8 +35,8 @@ def about(request):
     context_dict['visits'] = request.session['visits']
   #  context_dict['visits'] = request.session['visits']
     response = render(request,'rango/about.html',context=context_dict)
-    return response
-  #  return HttpResponse("Rango says here is the about page.<br/><a href='/rango/'>Index</a>")
+   # return response
+    return HttpResponse("Rango says here is the about page.")
 
 
 def show_category(request,category_name_slug):
